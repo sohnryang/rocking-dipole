@@ -1,0 +1,18 @@
+{
+  "name": "rocking-dipole",
+  "version": "0.0.0",
+  "description": "Electric dipole in uniform electric field",
+  "main": "index.js",
+  "repository": "git@github.com:sohnryang/rocking-dipole.git",
+  "author": "Ryang Sohn <loop.infinitely@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "three": "^0.129.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.128.0",
+    "parcel": "^2.0.0-beta.2",
+    "typescript": "^4.3.2"
+  }
+}
