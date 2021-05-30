@@ -9,7 +9,7 @@ export class DipoleState {
 }
 
 function applyForce(theta: number, config: DipoleConfig): number {
-  return 3.3 * config.dipoleMoment * config.electricField * Math.sin(theta);
+  return -3.3 * config.dipoleMoment * config.electricField * Math.sin(theta);
 }
 
 export function verlet(
