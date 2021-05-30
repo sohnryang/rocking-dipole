@@ -1,4 +1,7 @@
 import * as THREE from "three";
+import * as dat from "dat.gui";
+
+import { DipoleConfig } from "./dipole-config";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -10,6 +13,13 @@ const camera = new THREE.PerspectiveCamera(
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+const gui = new dat.GUI();
+const config = new DipoleConfig(0, 1.08);
+gui.add(config, "theta", 0, 2 * Math.PI).onChange(() => {
+  resetToInitial();
+});
+gui.add(config, "dipoleMoment", 0, 10);
 
 const lights = [
   new THREE.PointLight(0xffffff, 1, 0),
@@ -40,13 +50,17 @@ scene.add(bar);
 
 camera.position.z = 10;
 
+let theta = config.theta;
 function updatePosition(theta: number) {
   positiveCharge.position.set(5 * Math.cos(theta), 5 * Math.sin(theta), 0);
   negativeCharge.position.set(-5 * Math.cos(theta), -5 * Math.sin(theta), 0);
   bar.rotation.z = theta;
 }
 
-let theta = 0.0;
+function resetToInitial() {
+  theta = config.theta;
+}
+
 function animate() {
   updatePosition((theta += 0.01));
   requestAnimationFrame(animate);
