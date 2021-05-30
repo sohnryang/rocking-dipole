@@ -5,11 +5,13 @@ import { DipoleConfig } from "./dipole-config";
 import { DipoleState, verlet } from "./solver";
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  100
+const camera = new THREE.OrthographicCamera(
+  -15,
+  15,
+  (15 * window.innerHeight) / window.innerWidth,
+  (-15 * window.innerHeight) / window.innerWidth,
+  1,
+  10
 );
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
