@@ -28,7 +28,7 @@
   "scripts": {
     "start": "./node_modules/.bin/parcel index.html",
     "build": "./node_modules/.bin/parcel build index.html --target app --public-url /rocking-dipole/",
-    "prepublish": "shx rm -rf dist/* && yarn build",
-    "publish": "./node_modules/.bin/gh-pages -d dist"
+    "predeploy": "rm -rf dist/* && yarn build",
+    "deploy": "./node_modules/.bin/gh-pages -d dist"
   }
 }
