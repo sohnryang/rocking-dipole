@@ -2,6 +2,7 @@ import * as THREE from "three";
 import * as dat from "dat.gui";
 
 import { DipoleConfig } from "./dipole-config";
+import { DipoleState, verlet } from "./solver";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -15,9 +16,10 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 const gui = new dat.GUI();
-const config = new DipoleConfig(0, 1.08);
-gui.add(config, "theta", 0, 2 * Math.PI).onChange(resetToInitial);
-gui.add(config, "dipoleMoment", 0, 10).onChange(resetToInitial);
+const config = new DipoleConfig(Math.PI / 4, 1.08, 10);
+gui.add(config, "theta", 0, 2 * Math.PI).onFinishChange(resetToInitial);
+gui.add(config, "dipoleMoment", 0, 10).onFinishChange(resetToInitial);
+gui.add(config, "electricField", 0, 100);
 
 const lights = [
   new THREE.PointLight(0xffffff, 1, 0),
@@ -48,19 +50,32 @@ scene.add(bar);
 
 camera.position.z = 10;
 
-let theta = config.theta;
-function updatePosition(theta: number) {
-  positiveCharge.position.set(5 * Math.cos(theta), 5 * Math.sin(theta), 0);
-  negativeCharge.position.set(-5 * Math.cos(theta), -5 * Math.sin(theta), 0);
-  bar.rotation.z = theta;
+let state = new DipoleState(config.theta, 0, 0);
+const clock = new THREE.Clock();
+function updatePosition(state: DipoleState) {
+  positiveCharge.position.set(
+    5 * Math.cos(state.theta),
+    5 * Math.sin(state.theta),
+    0
+  );
+  negativeCharge.position.set(
+    -5 * Math.cos(state.theta),
+    -5 * Math.sin(state.theta),
+    0
+  );
+  bar.rotation.z = state.theta;
 }
 
 function resetToInitial() {
-  theta = config.theta;
+  state.theta = config.theta;
+  state.omega = 0;
+  state.alpha = 0;
+  updatePosition(state);
 }
 
 function animate() {
-  updatePosition((theta += 0.01));
+  state = verlet(state, clock.getDelta(), config);
+  updatePosition(state);
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
 }
