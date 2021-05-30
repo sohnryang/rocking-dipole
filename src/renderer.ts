@@ -16,10 +16,8 @@ document.body.appendChild(renderer.domElement);
 
 const gui = new dat.GUI();
 const config = new DipoleConfig(0, 1.08);
-gui.add(config, "theta", 0, 2 * Math.PI).onChange(() => {
-  resetToInitial();
-});
-gui.add(config, "dipoleMoment", 0, 10);
+gui.add(config, "theta", 0, 2 * Math.PI).onChange(resetToInitial);
+gui.add(config, "dipoleMoment", 0, 10).onChange(resetToInitial);
 
 const lights = [
   new THREE.PointLight(0xffffff, 1, 0),
